@@ -38,34 +38,35 @@ const CARDS = [
 const DOCUMENTS = [
   {
     cardId: "cms-teams",
-    title: "TEAM Participant List — Q2 2026",
-    filename: "2026q2-team-participant-list-06-23-2026.xlsx",
+    title: "SNF 3-Day Waiver Approved List — Q1 2026",
+    filename: "2026Q1_SNF3DayWaiverApprovedList.xlsx",
     description:
-      "Hospitals participating in the TEAM bundled-payment model, Q2 2026 (updated 6/23/2026).",
+      "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q1 2026.",
     dateAdded: "2026-08-25",
   },
   {
     cardId: "cms-teams",
-    title: "TEAM Qualified SNF List — Q1 2026",
-    filename: "team-qualifiedsnflist-q12026_12_5_25.xlsx",
-    description:
-      "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q1 2026 (published 12/5/2025). Verify quarter/date — filename differs from the others.",
-    dateAdded: "2026-08-25",
-  },
-  {
-    cardId: "cms-teams",
-    title: "TEAM Qualified SNF List — Q2 2026",
-    filename: "2026q2-team-qualified-snf-list.xlsx",
+    title: "SNF 3-Day Waiver Approved List — Q2 2026",
+    filename: "2026Q2_SNF3DayWaiverApprovedList.xlsx",
     description:
       "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q2 2026.",
     dateAdded: "2026-08-25",
   },
   {
     cardId: "cms-teams",
-    title: "TEAM Qualified SNF List — Q3 2026",
-    filename: "2026-q3-team-qualified-snf-list.xlsx",
+    title: "SNF 3-Day Waiver Approved List — Q3 2026",
+    filename: "2026Q3_SNF3DayWaiverApprovedList.xlsx",
     description:
       "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q3 2026 (effective Jul 1 - Sept 30, 2026).",
     dateAdded: "2026-08-25",
   },
+  // Participant list not currently in documents/cms-teams/ — add back in
+  // once uploaded, e.g.:
+  // {
+  //   cardId: "cms-teams",
+  //   title: "TEAM Participant List — Q2 2026",
+  //   filename: "2026q2-team-participant-list-06-23-2026.xlsx",
+  //   description: "Hospitals participating in the TEAM bundled-payment model, Q2 2026.",
+  //   dateAdded: "2026-08-25",
+  // },
 ];
