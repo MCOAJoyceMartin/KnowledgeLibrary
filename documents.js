@@ -36,14 +36,36 @@ const CARDS = [
 ];
 
 const DOCUMENTS = [
-  // Example entry — delete this once real files are uploaded, or edit it
-  // in place to describe the first real document you add.
-  // {
-  //   cardId: "cms-teams",
-  //   title: "TEAM Qualified SNF List — Q3 2026",
-  //   filename: "TEAM_Qualified_SNF_List_Q3_2026.pdf",
-  //   description:
-  //     "CMS's list of facilities qualifying for the SNF 3-day rule waiver, effective Jul 1 - Sept 30 2026.",
-  //   dateAdded: "2026-08-25",
-  // },
+  {
+    cardId: "cms-teams",
+    title: "TEAM Participant List — Q2 2026",
+    filename: "2026q2-team-participant-list-06-23-2026.xlsx",
+    description:
+      "Hospitals participating in the TEAM bundled-payment model, Q2 2026 (updated 6/23/2026).",
+    dateAdded: "2026-08-25",
+  },
+  {
+    cardId: "cms-teams",
+    title: "TEAM Qualified SNF List — Q1 2026",
+    filename: "team-qualifiedsnflist-q12026_12_5_25.xlsx",
+    description:
+      "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q1 2026 (published 12/5/2025). Verify quarter/date — filename differs from the others.",
+    dateAdded: "2026-08-25",
+  },
+  {
+    cardId: "cms-teams",
+    title: "TEAM Qualified SNF List — Q2 2026",
+    filename: "2026q2-team-qualified-snf-list.xlsx",
+    description:
+      "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q2 2026.",
+    dateAdded: "2026-08-25",
+  },
+  {
+    cardId: "cms-teams",
+    title: "TEAM Qualified SNF List — Q3 2026",
+    filename: "2026-q3-team-qualified-snf-list.xlsx",
+    description:
+      "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q3 2026 (effective Jul 1 - Sept 30, 2026).",
+    dateAdded: "2026-08-25",
+  },
 ];
