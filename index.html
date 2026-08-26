@@ -169,6 +169,30 @@
     font-size: 0.8rem;
     color: var(--muted);
   }
+  .focus-row { background: #eaf1fb; }
+  .state-group-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .focus-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-left: 0.75rem;
+  }
+  .focus-swatch {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 3px;
+    background: #eaf1fb;
+    border: 1px solid #c7d9f2;
+    display: inline-block;
+  }
 
   .doc-list {
     list-style: none;
@@ -243,6 +267,7 @@
     <button class="back-link" onclick="showGrid()">&larr; Back to all topics</button>
     <h2 id="detail-title"></h2>
     <p id="detail-description"></p>
+    <div id="team-hospital-summary"></div>
     <div id="facility-summary"></div>
     <ul class="doc-list" id="doc-list"></ul>
   </div>
@@ -265,6 +290,75 @@
       `;
       grid.appendChild(el);
     });
+  }
+
+  function renderTeamHospitalSummary(cardId) {
+    const container = document.getElementById("team-hospital-summary");
+    container.innerHTML = "";
+
+    const summary = typeof TEAM_HOSPITAL_SUMMARY !== "undefined" ? TEAM_HOSPITAL_SUMMARY : null;
+    if (!summary || summary.cardId !== cardId) return;
+
+    const byState = { NM: [], TX: [] };
+    summary.hospitals.forEach((h) => {
+      if (byState[h.state]) byState[h.state].push(h);
+    });
+
+    const stateBlock = (stateCode, stateLabel) => {
+      const list = byState[stateCode] || [];
+      const focusCount = list.filter((h) => h.inFocusMarket).length;
+      const focusMarket = summary.focusMarkets[stateCode];
+      const rows = list
+        .map(
+          (h) => `
+            <tr class="${h.inFocusMarket ? "focus-row" : ""}">
+              <td>${h.ccn}</td>
+              <td>${h.name}</td>
+              <td>${h.cbsaName}</td>
+              <td>${h.type}</td>
+            </tr>
+          `
+        )
+        .join("");
+      return `
+        <p class="summary-sub" style="margin-top:1rem;">
+          <span class="state-group-label">${stateLabel}</span>
+          — ${list.length} participant hospital${list.length === 1 ? "" : "s"}
+          (${focusCount} in ${focusMarket})
+        </p>
+        <div class="summary-table-wrap">
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>CCN</th>
+                <th>Hospital</th>
+                <th>Market (CBSA)</th>
+                <th>Participant Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows || `<tr><td colspan="4">None currently on the list.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    container.innerHTML = `
+      <div class="summary-panel">
+        <h3>
+          TEAM participant hospitals — NM &amp; TX
+          <span class="focus-legend"><span class="focus-swatch"></span> our focus markets</span>
+        </h3>
+        <p class="summary-sub">
+          As of ${summary.asOf}, from <strong>${summary.sourceDocument}</strong>.
+          These are acute-care hospitals participating in TEAM itself —
+          separate from the SNF 3-day waiver list below.
+        </p>
+        ${stateBlock("NM", "New Mexico")}
+        ${stateBlock("TX", "Texas")}
+      </div>
+    `;
   }
 
   function renderFacilitySummary(cardId) {
@@ -345,6 +439,7 @@
     document.getElementById("detail-title").textContent = card.title;
     document.getElementById("detail-description").textContent = card.description;
 
+    renderTeamHospitalSummary(cardId);
     renderFacilitySummary(cardId);
 
     const docs = DOCUMENTS.filter((d) => d.cardId === cardId).sort((a, b) =>
