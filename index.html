@@ -13,6 +13,12 @@
     --accent: #2563a8;
     --accent-dark: #1d4d7f;
     --border: #e2e6ea;
+    --good-bg: #e8f5ec;
+    --good-text: #1e7a3d;
+    --bad-bg: #fdeeee;
+    --bad-text: #b3261e;
+    --warn-bg: #fff4e0;
+    --warn-text: #93590a;
   }
   * { box-sizing: border-box; }
   body {
@@ -105,6 +111,65 @@
     color: var(--muted);
     font-size: 0.95rem;
   }
+
+  /* Facility eligibility summary */
+  .summary-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .summary-panel h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+  }
+  .summary-panel .summary-sub {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .summary-table-wrap {
+    overflow-x: auto;
+  }
+  table.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  table.summary-table th {
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    border-bottom: 2px solid var(--border);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  table.summary-table td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.summary-table tr:last-child td { border-bottom: none; }
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+  }
+  .badge-good { background: var(--good-bg); color: var(--good-text); }
+  .badge-bad { background: var(--bad-bg); color: var(--bad-text); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .summary-note {
+    margin: 0.9rem 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
   .doc-list {
     list-style: none;
     margin: 0;
@@ -178,6 +243,7 @@
     <button class="back-link" onclick="showGrid()">&larr; Back to all topics</button>
     <h2 id="detail-title"></h2>
     <p id="detail-description"></p>
+    <div id="facility-summary"></div>
     <ul class="doc-list" id="doc-list"></ul>
   </div>
 </main>
@@ -201,13 +267,85 @@
     });
   }
 
+  function renderFacilitySummary(cardId) {
+    const container = document.getElementById("facility-summary");
+    container.innerHTML = "";
+
+    const summary = typeof FACILITY_SUMMARY !== "undefined" ? FACILITY_SUMMARY : null;
+    if (!summary || summary.cardId !== cardId) return;
+
+    const rows = summary.facilities
+      .map((f) => {
+        const found = !!f.name;
+        const waiverBadge = !found
+          ? `<span class="badge badge-warn">Not on list</span>`
+          : f.waiverEligible
+          ? `<span class="badge badge-good">Eligible</span>`
+          : `<span class="badge badge-bad">Not eligible</span>`;
+        const activeBadge = f.activeInTeam
+          ? `<span class="badge badge-good">Yes</span>`
+          : `<span class="badge badge-bad">No</span>`;
+        return `
+          <tr>
+            <td>${f.ccn}</td>
+            <td>${f.name || "&mdash;"}</td>
+            <td>${f.city ? `${f.city}, ${f.state}` : "&mdash;"}</td>
+            <td>${activeBadge}</td>
+            <td>${waiverBadge}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const missing = summary.facilities.filter((f) => !f.name).map((f) => f.ccn);
+
+    container.innerHTML = `
+      <div class="summary-panel">
+        <h3>Current quarter: ${summary.quarter} (effective ${summary.effectivePeriod})</h3>
+        <p class="summary-sub">
+          MCOA facility status as of ${summary.lastChecked}, checked against
+          <strong>${summary.sourceDocument}</strong>. "Active in TEAM" marks
+          facilities in a state where TEAM participation is currently
+          mandatory; the waiver column reflects the separate SNF 3-day rule
+          waiver list, which any qualifying facility can be on regardless of
+          TEAM participation.
+        </p>
+        <div class="summary-table-wrap">
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>CCN</th>
+                <th>Facility</th>
+                <th>Location</th>
+                <th>Active in TEAM</th>
+                <th>3-Day Waiver (${summary.quarter})</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+        ${
+          missing.length
+            ? `<p class="summary-note">CCN${missing.length > 1 ? "s" : ""} ${missing.join(
+                ", "
+              )} ${missing.length > 1 ? "do" : "does"} not appear on the ${summary.quarter} approved list — double-check the CCN, or confirm with CMS whether this is expected.</p>`
+            : ""
+        }
+      </div>
+    `;
+  }
+
   function showDetail(cardId) {
     const card = CARDS.find((c) => c.id === cardId);
     if (!card) return;
-    document.getElementById("card-grid").parentElement.querySelector("#card-grid").style.display = "none";
+    document.getElementById("card-grid").style.display = "none";
     document.getElementById("detail-view").style.display = "block";
     document.getElementById("detail-title").textContent = card.title;
     document.getElementById("detail-description").textContent = card.description;
+
+    renderFacilitySummary(cardId);
 
     const docs = DOCUMENTS.filter((d) => d.cardId === cardId).sort((a, b) =>
       (b.dateAdded || "").localeCompare(a.dateAdded || "")
