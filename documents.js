@@ -84,6 +84,47 @@ const DOCUMENTS = [
  *      waiverEligible, name/city/state (facility names or locations can
  *      change), and the quarter/effectivePeriod/lastChecked fields.
  */
+/*
+ * TEAM participant hospitals in NM and TX — shown above FACILITY_SUMMARY
+ * in the CMS TEAMs detail view. Pulled from the TEAM Participant List
+ * document above (see DOCUMENTS). "inFocusMarket" flags the specific
+ * metro areas that matter for our own facilities (Albuquerque for NM,
+ * Dallas-Fort Worth for TX) — matches the highlighting applied to the
+ * source spreadsheet itself.
+ *
+ * TO UPDATE: re-derive this list from the newest TEAM Participant List
+ * spreadsheet each time CMS issues one (filter rows where CBSA State is
+ * NM or TX), and update asOf/sourceDocument.
+ */
+const TEAM_HOSPITAL_SUMMARY = {
+  cardId: "cms-teams",
+  asOf: "2026-04-15",
+  sourceDocument: "TEAM Participant List — Q2 2026",
+  focusMarkets: { NM: "Albuquerque, NM", TX: "Dallas-Fort Worth, TX" },
+  hospitals: [
+    { ccn: "320001", name: "UNM Hospital", cbsaName: "Albuquerque, NM", state: "NM", type: "Mandatory", inFocusMarket: true },
+    { ccn: "320009", name: "Lovelace Medical Center", cbsaName: "Albuquerque, NM", state: "NM", type: "Mandatory", inFocusMarket: true },
+    { ccn: "320017", name: "Lovelace Women's Hospital", cbsaName: "Albuquerque, NM", state: "NM", type: "Mandatory", inFocusMarket: true },
+    { ccn: "320021", name: "Presbyterian Hospital", cbsaName: "Albuquerque, NM", state: "NM", type: "Mandatory", inFocusMarket: true },
+    { ccn: "320074", name: "Lovelace Westside Hospital", cbsaName: "Albuquerque, NM", state: "NM", type: "Mandatory", inFocusMarket: true },
+    { ccn: "320022", name: "Plains Regional Medical Center", cbsaName: "Clovis, NM", state: "NM", type: "Mandatory", inFocusMarket: false },
+    { ccn: "320005", name: "San Juan Regional Medical Center Inc", cbsaName: "Farmington, NM", state: "NM", type: "Mandatory", inFocusMarket: false },
+    { ccn: "320002", name: "Christus St Vincent Regional Medical Center", cbsaName: "Santa Fe, NM", state: "NM", type: "Mandatory", inFocusMarket: false },
+    { ccn: "320090", name: "Presbyterian Santa Fe Medical Center", cbsaName: "Santa Fe, NM", state: "NM", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450231", name: "BSA Hospital", cbsaName: "Amarillo, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450209", name: "Northwest Texas Hospital", cbsaName: "Amarillo, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450875", name: "Quail Creek Surgical Hospital", cbsaName: "Amarillo, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450389", name: "UT Health East Texas Athens Hospital", cbsaName: "Athens, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450604", name: "Hill Country Memorial Hospital", cbsaName: "Fredericksburg, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450347", name: "Huntsville Memorial Hospital", cbsaName: "Huntsville, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450133", name: "Midland Memorial Hospital", cbsaName: "Midland, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450565", name: "Palo Pinto General Hospital", cbsaName: "Mineral Wells, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450080", name: "Titus Regional Medical Center", cbsaName: "Mount Pleasant, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450196", name: "Paris Regional Health", cbsaName: "Paris, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+    { ccn: "450010", name: "United Regional Health Care System", cbsaName: "Wichita Falls, TX", state: "TX", type: "Mandatory", inFocusMarket: false },
+  ],
+};
+
 const FACILITY_SUMMARY = {
   cardId: "cms-teams",
   quarter: "Q3 2026",
