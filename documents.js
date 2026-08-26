@@ -60,15 +60,14 @@ const DOCUMENTS = [
       "Facilities qualifying for the SNF 3-day rule waiver under TEAM, Q3 2026 (effective Jul 1 - Sept 30, 2026).",
     dateAdded: "2026-08-25",
   },
-  // Participant list not currently in documents/cms-teams/ — add back in
-  // once uploaded, e.g.:
-  // {
-  //   cardId: "cms-teams",
-  //   title: "TEAM Participant List — Q2 2026",
-  //   filename: "2026q2-team-participant-list-06-23-2026.xlsx",
-  //   description: "Hospitals participating in the TEAM bundled-payment model, Q2 2026.",
-  //   dateAdded: "2026-08-25",
-  // },
+  {
+    cardId: "cms-teams",
+    title: "TEAM Participant List — Q2 2026",
+    filename: "2026q2-team-participant-list-06-23-2026.xlsx",
+    description:
+      "Mandatory/voluntary hospital participants in the TEAM bundled-payment model, as of 4/15/2026. Albuquerque, NM rows highlighted blue; no Dallas-Fort Worth hospitals currently appear on the list.",
+    dateAdded: "2026-08-26",
+  },
 ];
 
 /*
@@ -92,13 +91,13 @@ const FACILITY_SUMMARY = {
   sourceDocument: "SNF 3-Day Waiver Approved List — Q3 2026",
   lastChecked: "2026-08-25",
   facilities: [
-    { ccn: "676407", name: null, city: null, state: null, activeInTeam: false, waiverEligible: false },
+    { ccn: "676407", name: "Pure Health Transitional Care at THR Arlington", city: "Arlington", state: "TX", activeInTeam: false, waiverEligible: false },
     { ccn: "455627", name: "Denton Village by PureHealth", city: "Denton", state: "TX", activeInTeam: false, waiverEligible: true },
     { ccn: "676420", name: "The Brightpointe", city: "Conroe", state: "TX", activeInTeam: false, waiverEligible: true },
     { ccn: "676410", name: "Pure Health Transitional Care at Texas Health Pres", city: "Dallas", state: "TX", activeInTeam: false, waiverEligible: true },
     { ccn: "676360", name: "The Shoal", city: "Texas City", state: "TX", activeInTeam: false, waiverEligible: true },
     { ccn: "325126", name: "Las Estancias by Pure Health", city: "Albuquerque", state: "NM", activeInTeam: true, waiverEligible: true },
-    { ccn: "325045", name: null, city: null, state: null, activeInTeam: false, waiverEligible: false },
+    { ccn: "325045", name: "Princeton Health & Rehabilitation", city: "Albuquerque", state: "NM", activeInTeam: true, waiverEligible: false },
     { ccn: "325074", name: "Manzano Del Sol by PureHealth", city: "Albuquerque", state: "NM", activeInTeam: true, waiverEligible: true },
     { ccn: "455685", name: "Lake Forest Village by PureHealth", city: "Denton", state: "TX", activeInTeam: false, waiverEligible: true },
   ],
