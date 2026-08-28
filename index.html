@@ -237,19 +237,60 @@
     white-space: nowrap;
   }
   .doc-item a.open-btn:hover { background: var(--accent-dark); }
-  .doc-group-label {
+
+  /* Collapsible folder groups within a card's document list */
+  .doc-group {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    overflow: hidden;
+  }
+  .doc-group-header {
+    width: 100%;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.6rem;
+    background: none;
+    border: none;
+    padding: 0.9rem 1.1rem;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+  }
+  .doc-group-header:hover { background: rgba(37, 99, 168, 0.05); }
+  .doc-group-icon { font-size: 1rem; line-height: 1; }
+  .doc-group-title { flex: 1; }
+  .doc-group-count {
     font-size: 0.72rem;
     font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    margin: 0.5rem 0 -0.25rem;
-    padding-left: 0.1rem;
+    color: var(--accent);
+    background: rgba(37, 99, 168, 0.08);
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
   }
-  .doc-group-label:first-child { margin-top: 0; }
+  .doc-group-chevron {
+    font-size: 0.85rem;
+    color: var(--muted);
+    transition: transform 0.15s ease;
+  }
+  .doc-group.expanded .doc-group-chevron { transform: rotate(180deg); }
+  .doc-group-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+  }
+  .doc-group.expanded .doc-group-body { max-height: 1200px; }
+  .doc-group-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
   .empty-state {
     text-align: center;
     padding: 3rem 1.5rem;
@@ -471,12 +512,12 @@
       return;
     }
 
-    // Documents sharing a `group` value render together under a shared
-    // folder-style label, in the order each group first appears in
-    // DOCUMENTS; ungrouped documents (no `group` field) render with no
-    // label, same as before. Within a group, newest (by dateAdded) still
-    // comes first — this is purely a display grouping, it doesn't change
-    // where the actual files live.
+    // Documents sharing a `group` value render together inside a collapsed-
+    // by-default expandable folder, in the order each group first appears
+    // in DOCUMENTS; ungrouped documents (no `group` field) render flat with
+    // no folder wrapper, same as before grouping existed. Within a group,
+    // newest (by dateAdded) still comes first — this is purely a display
+    // grouping, it doesn't change where the actual files live.
     const groupOrder = [];
     const groups = {};
     docs.forEach((doc) => {
@@ -493,27 +534,51 @@
         (b.dateAdded || "").localeCompare(a.dateAdded || "")
       );
 
-      if (key) {
-        const label = document.createElement("li");
-        label.className = "doc-group-label";
-        label.innerHTML = `📁 ${key}`;
-        list.appendChild(label);
+      if (!key) {
+        // Ungrouped documents render flat, exactly as they always have.
+        groupDocs.forEach((doc) => list.appendChild(buildDocItem(doc, card)));
+        return;
       }
 
-      groupDocs.forEach((doc) => {
-        const li = document.createElement("li");
-        li.className = "doc-item";
-        li.innerHTML = `
-          <div class="doc-info">
-            <h3>${doc.title}</h3>
-            <p>${doc.description || ""}</p>
-            ${doc.dateAdded ? `<span class="date">Added ${doc.dateAdded}</span>` : ""}
-          </div>
-          <a class="open-btn" href="${card.folder}${doc.filename}" target="_blank" rel="noopener">Open</a>
-        `;
-        list.appendChild(li);
-      });
+      const groupLi = document.createElement("li");
+      groupLi.className = "doc-group";
+      groupLi.innerHTML = `
+        <button type="button" class="doc-group-header" aria-expanded="false" onclick="toggleGroup(this)">
+          <span class="doc-group-icon">📁</span>
+          <span class="doc-group-title">${key}</span>
+          <span class="doc-group-count">${groupDocs.length}</span>
+          <span class="doc-group-chevron">⌄</span>
+        </button>
+        <div class="doc-group-body"><ul class="doc-group-list"></ul></div>
+      `;
+      const bodyList = groupLi.querySelector(".doc-group-list");
+      groupDocs.forEach((doc) => bodyList.appendChild(buildDocItem(doc, card)));
+      list.appendChild(groupLi);
     });
+  }
+
+  function buildDocItem(doc, card) {
+    const li = document.createElement("li");
+    li.className = "doc-item";
+    li.innerHTML = `
+      <div class="doc-info">
+        <h3>${doc.title}</h3>
+        <p>${doc.description || ""}</p>
+        ${doc.dateAdded ? `<span class="date">Added ${doc.dateAdded}</span>` : ""}
+      </div>
+      <a class="open-btn" href="${card.folder}${doc.filename}" target="_blank" rel="noopener">Open</a>
+    `;
+    return li;
+  }
+
+  // Expands/collapses one folder group in the document list. Collapsed by
+  // default (see showDetail()) so a topic with several groups doesn't dump
+  // every document on screen at once.
+  function toggleGroup(headerEl) {
+    const groupEl = headerEl.closest(".doc-group");
+    const expanded = !groupEl.classList.contains("expanded");
+    groupEl.classList.toggle("expanded", expanded);
+    headerEl.setAttribute("aria-expanded", String(expanded));
   }
 
   function showGrid() {
