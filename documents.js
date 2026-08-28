@@ -15,6 +15,16 @@
  *   1. Create a new folder under documents/ for it, e.g. documents/hr-policies/
  *   2. Add one object to CARDS below.
  *   3. Add DOCUMENTS entries pointing at files in that new folder.
+ *
+ * GROUPING DOCUMENTS WITHIN A CARD (optional):
+ *   Give any DOCUMENTS entries the same `group` string (e.g. "3DayWaiver")
+ *   and the page will show them under a shared folder-style label inside
+ *   that card's detail view, instead of one flat list. This is purely a
+ *   display grouping — it doesn't move or rename the actual files, so no
+ *   changes are needed in the repo's folder structure or in `filename`.
+ *   Leave `group` off (or blank) for documents that shouldn't be grouped;
+ *   they'll render normally with no label above them. Documents within a
+ *   group are still sorted newest-first by dateAdded, same as before.
  * =========================================================================
  */
 
@@ -38,6 +48,7 @@ const CARDS = [
 const DOCUMENTS = [
   {
     cardId: "cms-teams",
+    group: "3DayWaiver",
     title: "SNF 3-Day Waiver Approved List — Q1 2026",
     filename: "2026Q1_SNF3DayWaiverApprovedList.xlsx",
     description:
@@ -46,6 +57,7 @@ const DOCUMENTS = [
   },
   {
     cardId: "cms-teams",
+    group: "3DayWaiver",
     title: "SNF 3-Day Waiver Approved List — Q2 2026",
     filename: "2026Q2_SNF3DayWaiverApprovedList.xlsx",
     description:
@@ -54,6 +66,7 @@ const DOCUMENTS = [
   },
   {
     cardId: "cms-teams",
+    group: "3DayWaiver",
     title: "SNF 3-Day Waiver Approved List — Q3 2026",
     filename: "2026Q3_SNF3DayWaiverApprovedList.xlsx",
     description:
@@ -62,6 +75,7 @@ const DOCUMENTS = [
   },
   {
     cardId: "cms-teams",
+    group: "TEAM Participant List",
     title: "TEAM Participant List — Q2 2026",
     filename: "2026q2-team-participant-list-06-23-2026.xlsx",
     description:
